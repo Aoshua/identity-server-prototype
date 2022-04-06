@@ -22,7 +22,7 @@ namespace Prototype.Identity.Configuration
                     RequireClientSecret = false, // obsolete with PKCE
                     AllowOfflineAccess = true,
                     RedirectUris = new string[] { "https://localhost:8080/auth" },
-                    PostLogoutRedirectUris = new string[] { "https://localhost:8080/log-in" },
+                    PostLogoutRedirectUris = new string[] { "https://localhost:8080/logged-out" },
                     ClientSecrets = new Secret[] { new Secret("secret".Sha256()) },
                     AllowedScopes = new string[]
                     {

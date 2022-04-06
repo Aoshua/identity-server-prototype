@@ -10,9 +10,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<PrototypeIdentityDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-//builder.Services.AddIdentityCore<User>();
-builder.Services.AddIdentityCore<User>()
-    .AddEntityFrameworkStores<PrototypeIdentityDbContext>();
+//builder.Services.AddIdentityCore<User>()
+//    .AddEntityFrameworkStores<PrototypeIdentityDbContext>();
 
 IdentityServerRegistrar.Register(builder.Services, builder.Configuration);
 
@@ -33,6 +32,15 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// TODO: only allow clients
+app.UseCors(options =>
+{
+    options.AllowAnyHeader();
+    options.AllowAnyMethod();
+    options.AllowAnyOrigin();
+});
+
 app.UseStaticFiles();
 
 app.UseRouting();

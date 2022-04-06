@@ -16,8 +16,13 @@ There are 3 database contexts for this project:
 2. IdentityServer4's ConfigurationDbContext (used to configure clients, resources, scopes, etc.)
 3. IdentityServer4's PersistedGrantDbContext (used for temporary operations data such as auth codes and refresh tokens)
 
-If you do not wish to seed the database but only create the tables, then run the following commands: 
+If you do not wish to seed the database but only create the tables, then run the following commands:
 `cd Prototype.Identity`
 `dotnet ef database update -c PrototypeIdentityDbContext`
 `dotnet ef database update -c ConfigurationDbContext`
 `dotnet ef database update -c PersistedGrantDbContext`
+
+## Todo:
+☑️ Properly configure AspIdentity
+☑️ Replace username & password validation logic
+☑️ Move business logic out of controllers
