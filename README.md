@@ -1,8 +1,5 @@
 # Identity Server Prototype
-The purpose of the prototype is to stand up a proof of concept of an Identity Server/Provider built on IdentityServer4 that can provide authentication to the following applications:
-1. A .NET 6 Web API
-2. A Vue Web App
-3. ArcGIS/Esri
+The purpose of the prototype is to stand up a proof of concept of an Identity Server/Provider built on IdentityServer4 that can provide authentication to a Vue client app.
 
 ## Setup
 1. Run migrations for the main db context: `cd Prototype.Identity` then `dotnet ef database update -c PrototypeIdentityDbContext`
@@ -25,4 +22,3 @@ If you do not wish to seed the database but only create the tables, then run the
 ## Todo:
 ☑️ Properly configure AspIdentity
 ☑️ Replace username & password validation logic
-☑️ Move business logic out of controllers
