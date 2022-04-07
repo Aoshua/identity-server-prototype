@@ -8,28 +8,46 @@ namespace Prototype.Identity.Configuration
 {
     public class IdentityServerConfiguration
     {
-        private static readonly string PrototypeApi = "Prototype-api";
+        private static readonly string ApiClient = "api-client";
 
         public static IEnumerable<Client> Clients =>
             new Client[]
             {
                 new Client
                 {
-                    ClientId = PrototypeApi,
-                    ClientName = "Prototype API description.",
+                    ClientId = "vue-client",
+                    ClientName = "Vue Client",
                     AllowedGrantTypes = GrantTypes.Code,
                     RequirePkce = true,
                     RequireClientSecret = false, // obsolete with PKCE
                     AllowOfflineAccess = true,
-                    RedirectUris = new string[] { "https://localhost:8080/auth" },
-                    PostLogoutRedirectUris = new string[] { "https://localhost:8080/logged-out" },
+                    RedirectUris = new string[] { "http://localhost:8080/auth" },
+                    PostLogoutRedirectUris = new string[] { "http://localhost:8080/logged-out" },
+                    ClientSecrets = new Secret[] { new Secret("secret".Sha256()) },
+                    AllowedScopes = new string[]
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email
+                    }
+                },
+                new Client
+                {
+                    ClientId = ApiClient,
+                    ClientName = "API Client",
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequirePkce = true,
+                    RequireClientSecret = false, // obsolete with PKCE
+                    AllowOfflineAccess = true,
+                    RedirectUris = new string[] { "http://localhost:8080/auth" },
+                    PostLogoutRedirectUris = new string[] { "http://localhost:8080/logged-out" },
                     ClientSecrets = new Secret[] { new Secret("secret".Sha256()) },
                     AllowedScopes = new string[]
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
-                        PrototypeApi
+                        ApiClient
                     }
                 }
             };
@@ -37,7 +55,7 @@ namespace Prototype.Identity.Configuration
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
             {
-                new ApiScope(PrototypeApi, "Prototype API")
+                new ApiScope(ApiClient, "Prototype API")
             };
 
         public static IEnumerable<ApiResource> ApiResources => new ApiResource[] { };

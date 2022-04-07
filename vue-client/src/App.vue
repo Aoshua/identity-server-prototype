@@ -3,13 +3,21 @@
 		<router-link to="/">Home</router-link> |
 		<router-link to="/about">About</router-link>
 	</nav>
-	<router-view />
+	<!-- The suspense tag is needed to load view with async setup -->
+	<Suspense>
+		<router-view />
+	</Suspense>
 </template>
 
 <style>
+	:root {
+		--fc-primary: whitesmoke;
+		--fc-secondary: #f5f5f5a3;
+	}
+
 	body {
 		background-color: #2c3e50 !important;
-		color: whitesmoke;
+		color: var(--fc-primary);
 		height: 100vh;
 	}
 
