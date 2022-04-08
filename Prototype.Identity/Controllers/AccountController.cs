@@ -67,7 +67,7 @@ namespace Prototype.Identity.Controllers
         {
             var context = await interaction.GetAuthorizationContextAsync(model.ReturnUrl);
 
-            if (button != "login") // If the users hits "cancel" button. TODO: this is dumb, rework
+            if (button == "cancel")
             {
                 if (context != null)
                 {
@@ -91,7 +91,7 @@ namespace Prototype.Identity.Controllers
 
                     // Set explicit expiration if user has chosen "remember me"
                     // else used expiration configured by cookie middleware.
-                    AuthenticationProperties props = null;
+                    AuthenticationProperties? props = null;
                     if (AccountOptions.AllowRememberLogin && model.RememberLogin)
                         props = new AuthenticationProperties()
                         {
@@ -170,10 +170,12 @@ namespace Prototype.Identity.Controllers
                 var url = Url.Action("Logout", new {logoutId = vm.LogoutId });
 
                 // Trigger a redirect to the external provider for sign out
-                return SignOut(new AuthenticationProperties() { RedirectUri = url }, vm.ExternalAuthenticationScheme);
+                return SignOut(new AuthenticationProperties() { RedirectUri = url }, vm.ExternalAuthenticationScheme!);
             }
 
-            return View("LoggedOut", vm);
+            // Skip LoggedOut view if automatic redirect
+            if (vm.AutomaticRedirectAfterSignOut) return Redirect(vm.PostLogoutRedirectUri!);
+            else return View("LoggedOut", vm);
         }
 
         [HttpGet]
