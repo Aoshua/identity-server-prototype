@@ -4,10 +4,9 @@ namespace Prototype.Identity.Data.Models
 {
     /// <summary>
     /// For now, this is a direct copy of AbpZero User.
-    /// Eventually many of these properties will be stripped away,
-    /// but I'm just trying to keep mapping simple for now. 
+    /// Eventually many of these properties will be stripped away.
     /// </summary>
-    public class User : IdentityUser<long>
+    public class User : IdentityUser
     {
         public int? ProfilePictureId { get; set; }
         public bool ShouldChangePasswordOnNextLogin { get; set; }

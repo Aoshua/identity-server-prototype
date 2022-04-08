@@ -1,4 +1,8 @@
-﻿using Prototype.Identity.Data.Models;
+﻿using IdentityServer4.EntityFramework.DbContexts;
+using IdentityServer4.EntityFramework.Mappers;
+using Microsoft.EntityFrameworkCore;
+using Prototype.Identity.Configuration;
+using Prototype.Identity.Data.Models;
 
 namespace Prototype.Identity.Data
 {
@@ -11,11 +15,21 @@ namespace Prototype.Identity.Data
 
             var context = serviceScope?.ServiceProvider.GetRequiredService<PrototypeIdentityDbContext>();
             if (context == null) throw new NullReferenceException(nameof(context));
+            context.Database.Migrate();
+
+            var idsrvrContext = serviceScope?.ServiceProvider?.GetRequiredService<ConfigurationDbContext>();
+            if (idsrvrContext == null) throw new NullReferenceException(nameof(idsrvrContext));
+            idsrvrContext.Database.Migrate();
+
+            serviceScope?.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
 
             SeedTenants(context);
             SeedUsers(context);
+            SeedIdentityServer(idsrvrContext);
 
-            context.Dispose(); // Just to be sure no connections are left open
+            // Just to be sure no connections are left open
+            context.Dispose(); 
+            idsrvrContext.Dispose();
         }
 
         private static void SeedTenants(PrototypeIdentityDbContext context)
@@ -38,27 +52,26 @@ namespace Prototype.Identity.Data
             {
                 context.Users.Add(new User()
                 {
-                    ProfilePictureId = null,
                     ShouldChangePasswordOnNextLogin = false,
                     SignInTokenExpireTimeUtc = null,
                     SignInToken = null,
                     GoogleAuthenticatorKey = null,
                     TopMenuId = 1,
                     LeftMenuId = 2,
-                    CreationTime = DateTime.Parse("4/6/2022 10:50:44 AM"),
+                    CreationTime = DateTime.Parse("4/8/2022 11:00:00 AM"),
                     CreatorUserId = null,
-                    LastModificationTime = DateTime.Parse("4/6/2022 1:03:03 PM"),
+                    LastModificationTime = DateTime.Parse("4/8/2022 11:00:00 AM"),
                     LastModifiedUserId = null,
                     IsDeleted = false,
                     DeleterUserId = null,
                     DeletionTime = null,
                     AuthenticationSource = null,
-                    UserName = "admin",
+                    UserName = "steve64",
                     TenantId = 1,
-                    Email = "default@defaulttenant.com",
-                    Name = "admin",
-                    Surname = "admin",
-                    PasswordHash = "AQAAAAEAACcQAAAAEKYYP9iIhtl4F8pUSotG7YZgjhKjUVNr+tzN4/FpwZhUXdPTojk0JHTX9xRst1wttQ==",
+                    Email = "steveknobs@gmail.com",
+                    Name = "Steve",
+                    Surname = "Knobs",
+                    PasswordHash = "AQAAAAEAACcQAAAAEDEfweU/9o0j7QHoGqFlWgm97D+ZdEm2iudpUFPiXLAkGhR8lXCodjM2zYVtJpOtwQ==", // 123Qwe@
                     EmailConfirmationCode = null,
                     PasswordResetCode = null,
                     LockoutEnd = null,
@@ -66,14 +79,41 @@ namespace Prototype.Identity.Data
                     LockoutEnabled = true,
                     PhoneNumber = null,
                     PhoneNumberConfirmed = false,
-                    SecurityStamp = "4db93525-dfb1-b18e-35a8-3a02e8c31769",
+                    SecurityStamp = "5GFU7YSQHSF56K7YVPP6WKX6ESVV73IS",
                     TwoFactorEnabled = false,
                     EmailConfirmed = true,
                     IsActive = true,
-                    NormalizedUserName = "ADMIN",
-                    NormalizedEmail = "DEFAULT@DEFAULTTENANT.COM",
-                    ConcurrencyStamp = "68335910-ec9d-477b-8dfb-71a7a9dfd3d1"
+                    NormalizedUserName = "STEVE64",
+                    NormalizedEmail = "STEVEKNOBS@GMAIL.COM",
+                    ConcurrencyStamp = "dc7a3874-c244-4a30-a935-247d00a2ce4b"
                 });
+
+                context.SaveChanges();
+            }
+        }
+
+        private static void SeedIdentityServer(ConfigurationDbContext context)
+        {
+            if (!context.Clients.Any())
+            {
+                foreach (var client in IdentityServerConfiguration.Clients)
+                    context.Clients.Add(client.ToEntity());
+
+                context.SaveChanges();
+            }
+
+            if (!context.IdentityResources.Any())
+            {
+                foreach (var resource in IdentityServerConfiguration.IdentityResources)
+                    context.IdentityResources.Add(resource.ToEntity());
+
+                context.SaveChanges();
+            }
+
+            if (!context.ApiScopes.Any())
+            {
+                foreach (var resource in IdentityServerConfiguration.ApiScopes)
+                    context.ApiScopes.Add(resource.ToEntity());
 
                 context.SaveChanges();
             }

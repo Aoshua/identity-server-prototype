@@ -12,6 +12,8 @@ using IdentityServer4.Stores;
 using IdentityServer4.Test;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Prototype.Identity.Data.Models;
 using Prototype.Identity.Extensions.ActionAttributes;
@@ -27,23 +29,35 @@ namespace Prototype.Identity.Controllers
         private readonly IIdentityServerInteractionService interaction;
         private readonly IAuthenticationSchemeProvider schemeProvider;
         private readonly IEventService events;
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
         private readonly IClientStore clientStore;
-        private readonly TestUserStore users;
 
         public AccountController(
                 IIdentityServerInteractionService interaction
-                ,IClientStore clientStore // This may need to be replaced
+                ,IClientStore clientStore
                 ,IAuthenticationSchemeProvider schemeProvider
                 ,IEventService events
-                ,TestUserStore users // TODO replace with real user store
+                ,UserManager<User> userManager
+                ,SignInManager<User> signInManager
             )
         {
             this.interaction = interaction;
             this.schemeProvider = schemeProvider;
             this.events = events;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
             this.clientStore = clientStore;
-            this.users = users;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> RegisterUser()
+        {
+            var newUser = new User() { UserName = "Steve64" };
+            var rslt = await userManager.CreateAsync(newUser, "123Qwe@");
+            return Ok(rslt.Succeeded);
+        }
+
         /// <summary>
         /// Show login page
         /// </summary>
@@ -83,11 +97,12 @@ namespace Prototype.Identity.Controllers
 
             if (ModelState.IsValid)
             {
-                // Validate username & passsword (TODO: replace with actual user store)
-                if (users.ValidateCredentials(model.Username, model.Password))
+                // Validate username & passsword
+                var result = await signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
+                if (result.Succeeded)
                 {
-                    var user = users.FindByUsername(model.Username);
-                    await events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId, user.Username, clientId: context?.Client.ClientId));
+                    var user = await userManager.FindByNameAsync(model.Username);
+                    await events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName, clientId: context?.Client.ClientId));
 
                     // Set explicit expiration if user has chosen "remember me"
                     // else used expiration configured by cookie middleware.
@@ -99,8 +114,8 @@ namespace Prototype.Identity.Controllers
                             ExpiresUtc = DateTime.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
                         };
 
-                    // Issue authentication cookie with subject ID and username
-                    var issuer = new IdentityServerUser(user.SubjectId) { DisplayName = user.Username };
+                    // Issue authentication cookie with SubjectID (user ID) and username
+                    var issuer = new IdentityServerUser(user.Id) { DisplayName = user.UserName };
 
                     await HttpContext.SignInAsync(issuer, props);
 
@@ -157,7 +172,7 @@ namespace Prototype.Identity.Controllers
 
             if (User.Identity?.IsAuthenticated == true)
             {
-                await HttpContext.SignOutAsync(); // Delete local authentication cookie
+                await signInManager.SignOutAsync(); // Delete local authentication cookie
                 await events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
             }
 

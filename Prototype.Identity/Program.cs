@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Prototype.Identity.Configuration;
 using Prototype.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 using Prototype.Identity.Data.Models;
 
 #region Services
@@ -10,8 +11,9 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<PrototypeIdentityDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-//builder.Services.AddIdentityCore<User>()
-//    .AddEntityFrameworkStores<PrototypeIdentityDbContext>();
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<PrototypeIdentityDbContext>()
+    .AddDefaultTokenProviders();
 
 IdentityServerRegistrar.Register(builder.Services, builder.Configuration);
 
@@ -20,8 +22,8 @@ IdentityServerRegistrar.Register(builder.Services, builder.Configuration);
 #region App
 var app = builder.Build();
 
-//IdentityServerSeeder.Seed(app); // Migration & seed for IdentityServer4 (only run once). To only run migrations: Migrations/README.md
-//PrototypeIdentitySeeder.Seed(app); // Seeds the database (only run once)
+if (Convert.ToBoolean(app.Configuration.GetSection("MigrateAndSeed").Value))
+    PrototypeIdentitySeeder.Seed(app);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

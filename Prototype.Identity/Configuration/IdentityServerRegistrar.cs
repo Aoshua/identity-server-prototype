@@ -1,5 +1,6 @@
 ﻿using IdentityServer4.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Prototype.Identity.Data.Models;
 using System.Reflection;
 
 namespace Prototype.Identity.Configuration
@@ -19,8 +20,8 @@ namespace Prototype.Identity.Configuration
                     LogoutUrl = "/Account/Logout",
                     ErrorUrl = "/Error"
                 })
-                .AddTestUsers(IdentityServerConfiguration.TestUsers)
-                //.AddAspNetIdentity<User>() // TODO: real users store
+                //.AddTestUsers(IdentityServerConfiguration.TestUsers)
+                .AddAspNetIdentity<User>()
                 //.AddProfileService<PrototypeProfileService<TUser>>() // TODO: control what claims are loaded for a user
                 // The intention of storing these configurations in the database
                 // is to recover easily in the case of an app crash.

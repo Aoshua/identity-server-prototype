@@ -10,7 +10,7 @@ namespace Prototype.Identity.Data.Models
         /// This property is the UNIQUE name of a tenant. It can be
         /// used as a subdomain name in a web application (URL safe).
         /// </summary>
-        public string TenancyName { get; set; }
+        public string TenancyName { get; set; } = "";
         /// <summary>
         /// Display name of a tenant.
         /// </summary>

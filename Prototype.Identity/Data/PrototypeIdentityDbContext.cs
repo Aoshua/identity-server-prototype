@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Prototype.Identity.Data.Models;
 
 namespace Prototype.Identity.Data
 {
-    public class PrototypeIdentityDbContext : DbContext
+    public class PrototypeIdentityDbContext : IdentityDbContext<IdentityUser>
     {
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Tenant> Tenants { get; set; }

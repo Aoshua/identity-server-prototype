@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Prototype.Identity.Data.Models
+namespace Prototype.Identity.Models
 {
     [NotMapped]
     public class AccountOptions
