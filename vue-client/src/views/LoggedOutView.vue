@@ -1,14 +1,13 @@
 <script type="ts">
-import { useOidc } from '@/composables/useOidc'
+import { useIdentityProvider } from '@/composables/useIdentityProvider'
 import { defineComponent } from 'vue'
 
 
 export default defineComponent({
     name: 'LoggedOutView',
     setup() {
-        const {mgr} = useOidc()
-        
-        mgr.signoutRedirectCallback()
+        const {handleLogoutResponse} = useIdentityProvider()
+        handleLogoutResponse()
     },
 })
 </script>

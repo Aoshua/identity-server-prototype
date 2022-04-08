@@ -1,19 +1,17 @@
 <script lang="ts">
 	import { defineComponent, ref } from "vue"
-	import { useOidc } from "@/composables/useOidc"
 	import { useRoute } from "vue-router"
     import jwt_decode from "jwt-decode"
+	import { useIdentityProvider } from "@/composables/useIdentityProvider"
 
 	export default defineComponent({
 		name: "TokenDetails",
 		// The router-view that loads a view with an async setup() needs to be wrapped in <Suspense>
 		async setup() {
 			const route = useRoute()
+			const { handleLoginResponse, logout } = useIdentityProvider()			
 
-			const { mgr } = useOidc()
-			await mgr.signinRedirectCallback() // 2. Request Authorization Token
-
-			let user = await mgr.getUser()
+			let user = await handleLoginResponse()
 			//console.log("user: ", user)
 
             const accessTokenDecoded = ref(
@@ -21,10 +19,6 @@
                 ? JSON.stringify(jwt_decode(user.access_token), null, 4)
                 : "Error loading user"
             )
-
-            const logout = ref(() => {
-                mgr.signoutRedirect()
-            })
 
 			return {
                 accessTokenDecoded,

@@ -2,7 +2,7 @@
 	<div class="home">
 		<img alt="Vue logo" src="../assets/logo.png" />
 		<div class="mt-3">
-			<button type="button" class="btn btn-outline-success" @click="requestResource">Request Protected Resource</button>
+			<button type="button" class="btn btn-outline-success" @click="redirectToLogin">Request Protected Resource</button>
 			<br />
 			<button type="button" class="mt-3 btn btn-outline-danger" @click="clearSiteData">Clear Site Data</button>
 		</div>
@@ -11,15 +11,12 @@
 
 <script lang="ts">
 	import { defineComponent, ref } from "vue"
-	import { useOidc } from "@/composables/useOidc"
+	import { useIdentityProvider } from "@/composables/useIdentityProvider"
 
 	export default defineComponent({
 		name: "HomeView",
 		setup() {
-			const { mgr } = useOidc()
-			const requestResource = ref(() => {
-				mgr.signinRedirect() // 1. Make Authorization Request
-			})
+			const { redirectToLogin } = useIdentityProvider()
 
 			const clearSiteData = ref(() => {
 				localStorage.clear()
@@ -29,7 +26,7 @@
 
 			return {
 				clearSiteData,
-				requestResource
+				redirectToLogin
 			}
 		}
 	})
