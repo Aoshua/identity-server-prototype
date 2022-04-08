@@ -8,7 +8,8 @@ const settings = {
 	redirect_uri: "http://localhost:8080/auth",
 	post_logout_redirect_uri: "http://localhost:8080/logged-out",
 	response_type: "code",
-	scope:"openid profile email"
+	scope:"openid profile email",
+	loadUserInfo: true // calls /connect/userinfo
 };
 
 const mgr = new UserManager(settings)

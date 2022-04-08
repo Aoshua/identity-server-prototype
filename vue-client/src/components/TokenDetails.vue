@@ -22,28 +22,15 @@
                 : "Error loading user"
             )
 
-            const userInfo = ref<string | undefined>("Uninitialized")
-            const getUserInfo = async () => {
-                let response = await fetch('https:localhost:44360/connect/userinfo', {
-                    method: 'GET',
-                    headers: new Headers({
-                        'Authorization': `Bearer ${user?.access_token}`
-                    })
-                })
-
-                if (response.status == 200) {
-                    let content = await response.json()
-                    userInfo.value = JSON.stringify(content, null, 4)
-                }
-                else userInfo.value = user ? user.id_token : "Error loading user"
-            }
-            getUserInfo()
+            const logout = ref(() => {
+                mgr.signoutRedirect()
+            })
 
 			return {
                 accessTokenDecoded,
 				route,
                 user,
-                userInfo
+                logout
 			}
 		}
 	})
@@ -52,17 +39,18 @@
 <template>
     <h3 class="fc-sec">{{ route.query.code }}</h3>
 		<div class="row mx-0 mt-3">
-			<div class="col-6">
-				<h3>Access Token</h3>
-                <p v-if="user" class="text-start text-break fc-sec">{{ user.access_token }}</p>
-                <h4 class="text-start">Decoded</h4>
-                <pre class="text-start fc-sec">{{accessTokenDecoded}}</pre>
+			<div class="col-6 text-start">
+				<h3 class="text-center">Access Token</h3>
+                <p v-if="user" class="text-break fc-sec">{{ user.access_token }}</p>
+                <h4>Decoded</h4>
+                <pre class="fc-sec">{{accessTokenDecoded}}</pre>
 			</div>
-			<div class="col-6">
-				<h3>ID Token</h3>
-                <p v-if="user" class="text-start text-break fc-sec">{{ user.id_token }}</p>
-                <h4 class="text-start">Exchanged For</h4>
-                <pre class="text-start fc-sec">{{userInfo}}</pre>
+			<div class="col-6 text-start">
+				<h3 class="text-center">ID Token</h3>
+                <p v-if="user" class="text-break fc-sec">{{ user.id_token }}</p>
+                <h4 class="">Profile</h4>
+                <pre v-if="user" class="text-start fc-sec">{{ JSON.stringify(user.profile, null, 4) }}</pre>
+                <button type="button" class="btn btn-outline-warning" @click="logout">Logout</button>
 			</div>
 		</div>
 </template>
