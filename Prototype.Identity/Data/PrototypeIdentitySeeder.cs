@@ -52,6 +52,7 @@ namespace Prototype.Identity.Data
             {
                 context.Users.Add(new User()
                 {
+                    Id = "b3ca6398-51cf-4da3-93e9-7816e852f1e8",
                     ShouldChangePasswordOnNextLogin = false,
                     SignInTokenExpireTimeUtc = null,
                     SignInToken = null,

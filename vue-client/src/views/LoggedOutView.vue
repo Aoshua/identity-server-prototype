@@ -12,7 +12,6 @@ export default defineComponent({
 })
 </script>
 
-
 <template>
     <p>You have logged out</p>
 </template>

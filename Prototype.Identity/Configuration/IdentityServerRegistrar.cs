@@ -22,7 +22,7 @@ namespace Prototype.Identity.Configuration
                 })
                 //.AddTestUsers(IdentityServerConfiguration.TestUsers)
                 .AddAspNetIdentity<User>()
-                //.AddProfileService<PrototypeProfileService<TUser>>() // TODO: control what claims are loaded for a user
+                //.AddProfileService<PrototypeProfileService<User>>()
                 // The intention of storing these configurations in the database
                 // is to recover easily in the case of an app crash.
                 .AddConfigurationStore(options =>
@@ -35,7 +35,7 @@ namespace Prototype.Identity.Configuration
                     options.ConfigureDbContext = builder => builder.UseSqlServer(config.GetConnectionString("Default"),
                         sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
-                .AddDeveloperSigningCredential();
+                .AddDeveloperSigningCredential(); // TODO: Production signing credentials
         }
     }
 }
