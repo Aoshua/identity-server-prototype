@@ -29,24 +29,17 @@ namespace Prototype.Identity.Configuration
             var user = await userManager.FindByIdAsync(sub);
             var principal = await claimsFactory.CreateAsync(user);
 
-            switch (context.Client.ClientId)
-            {
-                case "vue-client":
-                    await base.GetProfileDataAsync(context); // do nothing for now
-                    break;
-                case "arcgis-client":
-                    var claims = principal.Claims.ToList();
-                    claims = claims.Where(claim => context.RequestedClaimTypes.Contains(claim.ToString())).ToList(); // only return requested claims
+            //await base.GetProfileDataAsync(context); // do nothing for now
 
-                    // ArcGIS claims
-                    claims.Add(new Claim("nickname", ""));
-                    claims.Add(new Claim("given_name", user.Name ?? ""));
-                    claims.Add(new Claim("middle_name", ""));
-                    claims.Add(new Claim("family_name", user.Surname ?? ""));
+            var claims = principal.Claims.ToList();
+            //claims = claims.Where(claim => context.RequestedClaimTypes.Contains(claim.ToString())).ToList(); // only return requested claims
 
-                    context.IssuedClaims = claims;
-                    break;
-            }
+            // ArcGIS claims
+            claims.Add(new Claim("nickname", ""));
+            claims.Add(new Claim("given_name", user.Name ?? ""));
+            claims.Add(new Claim("middle_name", ""));
+            claims.Add(new Claim("family_name", user.Surname ?? ""));
+            context.IssuedClaims = claims;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using IdentityServer4.EntityFramework.DbContexts;
+using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.EntityFramework.Mappers;
 using Microsoft.EntityFrameworkCore;
 using Prototype.Identity.Configuration;
@@ -118,6 +119,25 @@ namespace Prototype.Identity.Data
 
                 context.SaveChanges();
             }
+
+            //if (!context.ApiResources.Any())
+            //{
+            //    foreach(var resource in IdentityServerConfiguration.ApiResources)
+            //    {
+            //        context.ApiResources.Add(resource.ToEntity());
+            //        context.SaveChanges();
+
+            //        foreach(var scope in resource.Scopes)
+            //        {
+            //            context.ApiScopes.Add(new ApiScope
+            //            {
+            //                Name = scope,
+            //                ShowInDiscoveryDocument = true,
+            //                Enabled = true
+            //            });
+            //        }
+            //    }
+            //}
         }
     }
 }

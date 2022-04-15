@@ -8,57 +8,80 @@ namespace Prototype.Identity.Configuration
 {
     public class IdentityServerConfiguration
     {
-        private static readonly string ApiClient = "api-client";
+        private static readonly string ApiName = "my-api";
 
         public static IEnumerable<Client> Clients =>
             new Client[]
             {
                 new Client
                 {
-                    ClientId = "vue-client",
-                    ClientName = "Vue Client",
+                    ClientId = "unify-client",
+                    ClientName = "Vue App and ArcGIS",
                     AllowedGrantTypes = GrantTypes.Code,
                     RequirePkce = true,
                     RequireClientSecret = false, // obsolete with PKCE
+                    ClientSecrets = new Secret[] { new Secret("def2edf7-5d42-4edc-a84a-30136c340e13".Sha256()) }, // Not used, but ArcGIS asks for it
                     AllowOfflineAccess = true,
-                    AlwaysIncludeUserClaimsInIdToken = false,
-                    RedirectUris = new string[] { "http://localhost:8080/auth" },
-                    PostLogoutRedirectUris = new string[] { "http://localhost:8080/logged-out" },
+                    RedirectUris = new string[] 
+                    { 
+                        "http://localhost:8080/auth",
+                        "https://elements.maps.arcgis.com/sharing/rest/oauth2/oidc/SAv68PjPSJvOW2HR/signin"
+                    },
+                    PostLogoutRedirectUris = new string[] 
+                    { 
+                        "http://localhost:8080/logged-out", 
+                        "https://elements.maps.arcgis.com/sharing/rest/oauth2/oidc/SAv68PjPSJvOW2HR/signout" 
+                    },
                     AllowedScopes = new string[]
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email
+                        //"app.api.demo.all"
                     }
                 },
-                new Client
-                {
-                    ClientId = "arcgis-client",
-                    ClientName = "ArcGIS Client",
-                    AllowedGrantTypes = GrantTypes.Code,
-                    RequirePkce = true,
-                    RequireClientSecret = false, // obsolete with PKCE
-                    AllowOfflineAccess = true,
-                    AlwaysIncludeUserClaimsInIdToken = false,
-                    RedirectUris = new string[] { "https://elements.maps.arcgis.com/sharing/rest/oauth2/oidc/SAv68PjPSJvOW2HR/signin" },
-                    PostLogoutRedirectUris = new string[] { "https://elements.maps.arcgis.com/sharing/rest/oauth2/oidc/SAv68PjPSJvOW2HR/signout" },
-                    ClientSecrets = new Secret[] { new Secret("def2edf7-5d42-4edc-a84a-30136c340e13".Sha256()) }, // Not used, but ArcGIS asks for it
-                    AllowedScopes = new string[]
-                    {
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile,
-                        IdentityServerConstants.StandardScopes.Email
-                    }
-                }
+                //new Client
+                //{
+                //    ClientId = "arcgis-client",
+                //    ClientName = "ArcGIS Client",
+                //    AllowedGrantTypes = GrantTypes.Code,
+                //    RequirePkce = true,
+                //    RequireClientSecret = false, // obsolete with PKCE
+                //    AllowOfflineAccess = true,
+                //    AlwaysIncludeUserClaimsInIdToken = true,
+                //    RedirectUris = new string[] { "https://elements.maps.arcgis.com/sharing/rest/oauth2/oidc/SAv68PjPSJvOW2HR/signin" },
+                //    PostLogoutRedirectUris = new string[] { "https://elements.maps.arcgis.com/sharing/rest/oauth2/oidc/SAv68PjPSJvOW2HR/signout" },
+                //    ClientSecrets = new Secret[] { new Secret("def2edf7-5d42-4edc-a84a-30136c340e13".Sha256()) }, // Not used, but ArcGIS asks for it
+                //    AllowedScopes = new string[]
+                //    {
+                //        IdentityServerConstants.StandardScopes.OpenId,
+                //        IdentityServerConstants.StandardScopes.Profile,
+                //        IdentityServerConstants.StandardScopes.Email
+                //    }
+                //}
             };
 
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
             {
-                //new ApiScope(ApiClient, "Prototype API")
+                new ApiScope(ApiName, "Some API")
             };
 
-        public static IEnumerable<ApiResource> ApiResources => new ApiResource[] { };
+        //public static IEnumerable<ApiResource> ApiResources => new ApiResource[] 
+        //{
+        //    new ApiResource()
+        //    {
+        //        Name = "app.api.demo",
+        //        DisplayName = "Demo API",
+        //        ApiSecrets = new Secret[] { new Secret("96741fa7-c5a0-49de-b430-335c64bb6681".Sha256())},
+        //        Scopes = new string[]
+        //        {
+        //            "app.api.demo.read",
+        //            "app.api.demo.write",
+        //            "app.api.demo.all"
+        //        }
+        //    }
+        //};
 
         public static IEnumerable<IdentityResource> IdentityResources =>
             new IdentityResource[]

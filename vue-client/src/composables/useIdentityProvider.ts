@@ -3,8 +3,8 @@ import { UserManager, Log } from 'oidc-client-ts'
 Log.setLogger(console);
 
 const settings = {
-	authority: "https://localhost:44360/",
-	client_id: "vue-client",
+	authority: "https://localhost:44360", //"https://identityprovider.novotx.dev/",
+	client_id: "unify-client",
 	redirect_uri: "http://localhost:8080/auth",
 	post_logout_redirect_uri: "http://localhost:8080/logged-out",
 	response_type: "code",

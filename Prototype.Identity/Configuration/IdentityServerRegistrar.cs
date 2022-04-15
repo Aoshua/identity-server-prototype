@@ -22,7 +22,7 @@ namespace Prototype.Identity.Configuration
                 })
                 //.AddTestUsers(IdentityServerConfiguration.TestUsers)
                 .AddAspNetIdentity<User>()
-                //.AddProfileService<PrototypeProfileService<User>>()
+                .AddProfileService<PrototypeProfileService<User>>()
                 // The intention of storing these configurations in the database
                 // is to recover easily in the case of an app crash.
                 .AddConfigurationStore(options =>

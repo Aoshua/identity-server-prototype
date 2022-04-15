@@ -21,6 +21,16 @@ const routes: Array<RouteRecordRaw> = [
     path: '/logged-out',
     name: 'LoggedOutView',
     component: () => import(/* webpackChunkName: "LoggedOutView" */ '../views/LoggedOutView.vue')
+  },
+  {
+    path: '/esri-token-redirect',
+    name: 'EsriTokenRedirectView',
+    component: () => import(/* webpackChunkName: "EsriTokenRedirectView" */ '../views/EsriTokenRedirectView.vue')
+  },
+  {
+    path: '/map',
+    name: 'MapView',
+    component: () => import(/* webpackChunkName: "MapView" */ '../views/MapView.vue')
   }
 ]
 
